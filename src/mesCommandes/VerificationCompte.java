@@ -11,7 +11,7 @@ public class VerificationCompte extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private static final int EXPIRE = 60000;
-
+	//test git commit
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
          String nomRecu, motPasseRecu;
          String inscrireClient, connecterClient;
