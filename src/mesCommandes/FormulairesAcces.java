@@ -35,8 +35,6 @@ public class FormulairesAcces extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
          String demande, nomRecu, erreurInscription, erreurConnexion, inscriptionFaite;
-
-
      //  ********************************************************************************************        
      //  initialisation des diff rents param tres possibles
      //  ********************************************************************************************    
@@ -90,6 +88,18 @@ public class FormulairesAcces extends HttpServlet {
         			 + "Connexion"
         			 + "</TITLE></HEAD><BODY>"
         			 + "<p>Bienvenue "+ nom + "</p></BODY></HTML>");
+         }else {
+        	 out.println("<HTML><HEAD><TITLE>"
+        			 + "Inscription"
+        			 + "</TITLE></HEAD><BODY>");
+    		 out.println("<form action=\"verifCompte\" method=\"GET\">\r\n" + 
+    			 "  <p>Nom: <input type=\"text\" name=\"nom\" /></p>\r\n" + 
+    			 "  <p>Mot de passe: <input type=\"password\" name=\"mdp\" /></p>\r\n" +
+    			 "  <p>Email: <input type=\"text\" name=\"email\" /></p>\r\n" + 
+    			 "  <p>Telephone: <input type=\"text\" name=\"telephone\" /></p>\r\n" +
+    			 "  <input type=hidden name=mode value=\"inscription\"/>" +
+    			 "  <input type=\"submit\" value=\"Inscrire\" />\r\n" + 
+    			 "</form>");
          }
 //         out.println("<HTML><HEAD><TITLE>"
 //    			 + "Connexion"

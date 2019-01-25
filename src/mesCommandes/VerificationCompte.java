@@ -27,6 +27,7 @@ public class VerificationCompte extends HttpServlet {
         	 motPasseRecu = request.getParameter("mdp");
         	 if(nomRecu.length()>4 && motPasseRecu.length()>4) {
         		Cookie cookie = new Cookie(nomRecu, motPasseRecu); 
+        		cookie.setPath("/");
         		cookie.setMaxAge(EXPIRE);
         		response.addCookie(cookie);
         		response.sendRedirect("formulaire?inscriptionFait=True&nom="+nomRecu);

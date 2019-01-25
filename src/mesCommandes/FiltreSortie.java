@@ -1,5 +1,7 @@
 package mesCommandes;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -15,12 +17,23 @@ public class FiltreSortie implements Filter {
 		  HttpSession session = hrequest.getSession(); 
   
 		  //************************************************************
-		  // ce filtre doit s'executer après la servlet 
+		  // ce filtre doit s'executer aprï¿½s la servlet 
 		  // il vide le caddy du client en cours
 		  //************************************************************		  
 		  chain.doFilter(request, response); 
-
+		  nom = (String)session.getAttribute("name");
+		  ArrayList<String> result = Magasin.lesCaddy.remove(nom);
+		  if(result!=null) {
+			  System.out.println("Successfully removed");
+			  Iterator <String> iter = result.iterator();
+				while (iter.hasNext()) {
+					System.out.println(iter.next());
+				}
+		  }else {
+			  System.out.println("Error");
 		  }
+
+		}
 		  //************************************************************
 	}
 

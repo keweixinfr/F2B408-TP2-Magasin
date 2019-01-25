@@ -16,30 +16,30 @@ public class CommanderUnDisque extends HttpServlet {
         throws IOException, ServletException
 {  
   String nom = null;
-
-
-
+  String refer = request.getParameter("code");
+  String repertoire = request.getContextPath();
+  HttpSession session = request.getSession();
+  nom = session.getAttribute("name").toString();
+  ArrayList<String> leCaddie = Magasin.lesCaddy.get(nom);
+  if(leCaddie==null) {
+ 	  leCaddie = new ArrayList<String>();
+  }
+  leCaddie.add(refer);
+  Magasin.lesCaddy.put(nom, leCaddie);
     //  *********************************************************        
-	//   Si la personne dont le nom est dans la session, ne possède pas de caddie , 
-    //                       son caddie est créé dans l’ensemble des caddies, "Magasin.lesCaddy"
-  	//   C’est une nouvelle ArrayList qui est rajoutée dans la TreeMap "lesCaddy"  de la classe « Magasin », 
-    //         avec   comme clé le nom.
+	//   Si la personne dont le nom est dans la session, ne possï¿½de pas de caddie , 
+    //                       son caddie est crï¿½ï¿½ dans lï¿½ensemble des caddies, "Magasin.lesCaddy"
+  	//   Cï¿½est une nouvelle ArrayList qui est rajoutï¿½e dans la TreeMap "lesCaddy"  de la classe ï¿½ Magasin ï¿½, 
+    //         avec   comme clï¿½ le nom.
 	// 
 	//  **********************************************************                 
-
-  
-  //  ***********************************************************  
-  ArrayList<String> leCaddie = Magasin.lesCaddy.get(nom);
-
+  	
    //  **********************************************************        
-   //   Si le paramètre « ordre » est présent est a comme valeur « ajouter »,
-   //  la référence du disque passée en paramètre est rajoutée dans le panier (ArrayList<String>).
+   //   Si le paramï¿½tre ï¿½ ordre ï¿½ est prï¿½sent est a comme valeur ï¿½ ajouter ï¿½,
+   //  la rï¿½fï¿½rence du disque passï¿½e en paramï¿½tre est rajoutï¿½e dans le panier (ArrayList<String>).
    // 
    //  ***********************************************************
-  
 
-  
-  
 //**************************************************************** 
  response.setContentType("text/html");
  PrintWriter out = response.getWriter();
@@ -51,18 +51,19 @@ public class CommanderUnDisque extends HttpServlet {
  out.println("<body bgcolor=\"white\">");
  out.println("<h3>" + "Bonjour  "+ nom + "  voici  votre commande" + "</h3>");
  
+ 	Magasin.afficherContenuCaddy(leCaddie, out, repertoire);
     //  ************************************************************     
-	//   affichage du contenu du caddie par la méthode afficherContenuCaddy de « Magasin » avec trois paramètres : 
+	//   affichage du contenu du caddie par la mï¿½thode afficherContenuCaddy de ï¿½ Magasin ï¿½ avec trois paramï¿½tres : 
 	//    - le caddie 
-	//    - le « PrintWriter » pour pouvoir rajouter ces disques dans la réponse HTML,
-	//    - le répertoire courant de votre application  "request.getContextPath()"
+	//    - le ï¿½ PrintWriter ï¿½ pour pouvoir rajouter ces disques dans la rï¿½ponse HTML,
+	//    - le rï¿½pertoire courant de votre application  "request.getContextPath()"
 	//  *************************************************************                 
 
 
  
 	//  *************************************************************
  out.println(" </table>");
- out.println("<A HREF=afficheDisques> Vous ne pouvez commandez un autre disque </A><br> ");
+ out.println("<A HREF=achat> Vous pouvez commandez un autre disque </A><br> ");
  out.println("<A HREF=enregistre> Vous pouvez enregistrer votre commande </A><br> ");
  out.println("<A HREF=facturer> Fin de la commande et demande de la facture </A><br> ");
  out.println("</body>");

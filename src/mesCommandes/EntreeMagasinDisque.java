@@ -1,5 +1,6 @@
 package mesCommandes;
 import java.io.*;
+import java.util.ArrayList;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -14,30 +15,17 @@ public class EntreeMagasinDisque extends HttpServlet {
 	   {	  
 		String nomClient = request.getParameter("nom");
 		Stock stockCourant = new Stock();
-		
+		ArrayList<String> listeDisques;
 		
 		response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        Cookie[] cookies = request.getCookies();
+        HttpSession session = request.getSession();
+        session.setAttribute("name", nomClient);
+        session.setAttribute("stock", stockCourant);
+        response.sendRedirect("achat");
         
-        out.println("<HTML><HEAD><TITLE>"
-   			 + "Connexion"
-   			 + "</TITLE></HEAD><BODY>");
-        for(int i = 0; i < cookies.length; i++) {
-        	Cookie cookie = cookies[i];
-        	out.println("<p>Cookie name"+ cookie.getName());
-        	out.println("<p>Cookie value"+ cookie.getValue());
-        }
-        out.println("<p>Bienvenue </p></BODY></HTML>");
-		 //  ********************************************************************************************        
-	//  Cr�ez deux variables de session : � nomClient � qui a pour valeur le nom de l�utilisateur  
-	//  et � stockCourant �  qui a pour valeur une instance de la classe Stock, il contient une liste des disques disponibles
-	// et appelez la servlet  AfficherLesDisques.java
-	//  ********************************************************************************************
 
-              }
-  //  ********************************************************************************************
-		//}
+	   }
    
 	public void doPost(HttpServletRequest request,  HttpServletResponse response) throws IOException, ServletException
 	      { 

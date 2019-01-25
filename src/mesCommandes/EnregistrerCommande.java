@@ -17,17 +17,15 @@ public class EnregistrerCommande extends HttpServlet {
  
      public void doGet(HttpServletRequest request,  HttpServletResponse response)
                         throws IOException, ServletException
-    {  String nom = null;
-       ArrayList<String>  leCaddy = null;
-       
-       //  ******************************************************       
-       //   initialisez  nom et  le caddie du client : variable « nom » et  lesdisques »
-       //      
-       //  ****************************************************** 
-
+    {  
+    	 String nom = null;
+    	 ArrayList<String>  leCaddy = null;
+    	 String repertoire = request.getContextPath();
+ 		 HttpSession session = request.getSession();
+ 		 nom = session.getAttribute("name").toString();
+ 		 leCaddy = Magasin.lesCaddy.get(nom);
 	   
-	   
-      //  ******************************************************
+ 		 //  ******************************************************
           OuvreBase();
           AjouteNomBase(nom);
           response.setContentType("text/html");
@@ -41,19 +39,14 @@ public class EnregistrerCommande extends HttpServlet {
           out.println("<body bgcolor=\"white\">");
           out.println("<a HREF=afficheDisques> Vous pouvez commandez un autre disque </a><br> ");
 		  out.println("<A HREF=facturer> Fin de la commande et demande de la facture  de   " + nom.toUpperCase()+" </A><br> ");
-          out.println("<h3>" + " Disques rajoutés à la commande de  " + nom.toUpperCase()  + "</h3>");
-
-          
-      //  ******************************************************       
-      //   afficher le contenu du caddie
-      //  ******************************************************   
-
-          
-          
+          out.println("<h3>" + " Disques rajoutï¿½s ï¿½ la commande de  " + nom.toUpperCase()  + "</h3>");
+	      //  ******************************************************       
+	      //   afficher le contenu du caddie
+	      //  ******************************************************   
           
          //  **************************************************
           AjouteCaddyBase(nom,leCaddy);
-          out.println("<h3>" + "et voici " + nom.toUpperCase()  + "  Voici  l'ensemble de tes commandes  enregistrées " + "</h3>");
+          out.println("<h3>" + "et voici " + nom.toUpperCase()  + "  Voici  l'ensemble de tes commandes  enregistrï¿½es " + "</h3>");
           MontreCommandeBase(nom, out, request.getContextPath());
           out.println("</body>");
           out.println("</html>");
@@ -67,7 +60,7 @@ public class EnregistrerCommande extends HttpServlet {
           stmt = connexion.createStatement();
        }
            catch (Exception E) {         
-             log(" -------- problème  " + E.getClass().getName() );
+             log(" -------- problï¿½me  " + E.getClass().getName() );
              E.printStackTrace();
           }	
     }
@@ -78,7 +71,7 @@ public class EnregistrerCommande extends HttpServlet {
           connexion.close();         
        }
            catch (Exception E) {         
-             log(" -------- problème  " + E.getClass().getName() );
+             log(" -------- problï¿½me  " + E.getClass().getName() );
              E.printStackTrace();
           }	
     }
@@ -101,12 +94,23 @@ public class EnregistrerCommande extends HttpServlet {
      protected void AjouteCaddyBase(String nom, ArrayList<String> lesdisques ) {
        ResultSet rset = null;
        int cle =0;
-       String insertdisqueBD = "INSERT INTO commande (nomarticle,client)VALUES (?,?)";
+//       String insertdisqueBD = "INSERT INTO commande (nomarticle,client)VALUES (?,?)";
+       String insertdisque = "INSERT INTO  commande (nomarticle, client) " + 
+       		" SELECT ?, id as cid " + 
+       		" FROM client WHERE nom = ?";
+       
        try {
-    	   
+    	   pstmt= connexion.prepareStatement(insertdisque);
+    	   Iterator <String> iter = lesdisques.iterator();
+    	   	while (iter.hasNext()){
+    	   	 pstmt.setString(1, (String)iter.next());
+    	   	 pstmt.setString(2, nom);
+    	   	 pstmt.executeUpdate();
+    	    }
+
     	//  ********************************************************       
-        //   ajoutez le contenu du caddie dans la  base de données. « table commande » 
-       	//   utilisez une PreparedStatement JDBC de préférence
+        //   ajoutez le contenu du caddie dans la  base de donnï¿½es. ï¿½ table commande ï¿½ 
+       	//   utilisez une PreparedStatement JDBC de prï¿½fï¿½rence
         //  ********************************************************  
 
     	   
@@ -115,7 +119,7 @@ public class EnregistrerCommande extends HttpServlet {
      	  }
          
        catch (Exception E) {        
-             log(" - problème  ajoute " + E.getClass().getName() );
+             log(" - problï¿½me  ajoute " + E.getClass().getName() );
              E.printStackTrace();
           }	
     }
@@ -123,17 +127,30 @@ public class EnregistrerCommande extends HttpServlet {
      protected void MontreCommandeBase(String nom, PrintWriter out, String repertoire) {
        ResultSet rset = null;
        ResultSet rs = null;
+       Disque leDisque;
        int cle =0;
+       String selectCommande = "SELECT commande.nomarticle FROM commande JOIN client on commande.client=client.id WHERE client.nom =?" ;
        try {
-    	   
+    	   pstmt= connexion.prepareStatement(selectCommande);
+    	   pstmt.setString(1, nom);
+    	   rset=pstmt.executeQuery();
+    	   System.out.println(rset);
+    	   out.println("<table border=1>");
+    	   while (rset.next()) {
+               String nomarticle = rset.getString("nomarticle");
+               System.out.println(nomarticle);
+               leDisque = Stock.trouveDisque(nomarticle);
+               out.println( "<tr> <td>" + leDisque.getTitre() + "  ,  " + leDisque.getNom() + " ,  "  + leDisque.getPrix() + " Euros  ,  Annï¿½e :" + leDisque.getAnnee()  +"</td>");
+	   	       out.println("<td> <IMG SRC= '" + repertoire + "/images/" + leDisque.getImage() +"'  BORDER=0> </A><br> </td> ");    	 
+           }
+    	   out.println("</tr> </table>");
        //  *********************************************************      
-       //   affichez les disques que client a commandé  dans la  base de données. « table commande » 
-       // vous pouvez utiliser "afficherDisquesDansBase" avec 3 parmètre :
-       //      -  une instance de "Resulset"  résultat de la recherche des disques du client courant dans la base de données
-   	   //      - le « PrintWriter » pour pouvoir rajouter ces disques dans la page de la réponse HTML,
+       //   affichez les disques que client a commandï¿½  dans la  base de donnï¿½es. ï¿½ table commande ï¿½ 
+       // vous pouvez utiliser "afficherDisquesDansBase" avec 3 parmï¿½tre :
+       //      -  une instance de "Resulset"  rï¿½sultat de la recherche des disques du client courant dans la base de donnï¿½es
+   	   //      - le ï¿½ PrintWriter ï¿½ pour pouvoir rajouter ces disques dans la page de la rï¿½ponse HTML,
    	   //      - et le repertoire courant de votre application  "request.getContextPath()"
        //  **********************************************************  
-    
     	   
        }           
            catch (Exception E) {   

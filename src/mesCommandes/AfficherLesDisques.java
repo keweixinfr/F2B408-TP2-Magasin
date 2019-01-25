@@ -14,15 +14,10 @@ public class AfficherLesDisques extends HttpServlet {
 	throws IOException, ServletException {
 		String nom = null;
 		Stock stockDisponible = null;
-		
-	//  ********************************************************************************************        
-	//   initialisez  nom et  stockDisponible  à partir des variables de session.
-	//      pour l’instant il n’est pas fait de test pour savoir si ces variables existent, par la suite ce test sera fait par un filtre.
-	//  ********************************************************************************************                             	
-
-	
-	
-	
+		String repertoire = request.getContextPath();
+		HttpSession session = request.getSession();
+		nom = session.getAttribute("name").toString();
+		stockDisponible = (Stock)session.getAttribute("stock");
    //  ********************************************************************************************  
 	   response.setContentType("text/html");
 	   PrintWriter out = response.getWriter();
@@ -32,17 +27,17 @@ public class AfficherLesDisques extends HttpServlet {
 	   out.println("<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1' >");
 	   out.println("</head>");
 	   out.println("<body bgcolor=\"white\">");
-	   out.println("<h1> Super Marché du disque </h1>");
+	   out.println("<h1> Super Marchï¿½ du disque </h1>");
 	   out.println("<h3>" + "Bonjour " + nom.toUpperCase() + " vous pouvez commander un disque" + "</h3>");
-
+	   Magasin.afficherDisquesEnVente(stockDisponible, out, repertoire);
 		//  ********************************************************************************************        
-	   	// Appel de la méthode. afficherDisquesEnVente de Magasin, avec trois paramètres : 
+	   	// Appel de la mï¿½thode. afficherDisquesEnVente de Magasin, avec trois paramï¿½tres : 
 		//    - le stockDisponible)
-		//    - le « PrintWriter » pour pouvoir rajouter ces disques dans la page de la réponse HTML,
+		//    - le ï¿½ PrintWriter ï¿½ pour pouvoir rajouter ces disques dans la page de la rï¿½ponse HTML,
 		//    - et le repertoire courant de votre application  "request.getContextPath()", pour trouver les images des disques
 		// 
 	 	//  ********************************************************************************************                   
-		// cet affichage permet d'appeler "CommanderUnDisque" avec en paramètre le disque choisi
+		// cet affichage permet d'appeler "CommanderUnDisque" avec en paramï¿½tre le disque choisi
 
 		
 		
