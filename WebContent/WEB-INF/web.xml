@@ -74,6 +74,6 @@
   </filter-mapping>
   <filter-mapping>
     <filter-name>effaceCommende</filter-name>
-    <url-pattern>/servlet/achat</url-pattern>
+    <url-pattern>/servlet/enregistre</url-pattern>
   </filter-mapping>
 </web-app>

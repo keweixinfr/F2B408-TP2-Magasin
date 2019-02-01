@@ -62,6 +62,7 @@ public class Facturation extends HttpServlet {
 	protected void MontreCommandeBase(String nom, PrintWriter out, String repertoire) {
 	       ResultSet rset = null;
 	       ResultSet rs = null;
+	       int totalPrice = 0;
 	       Disque leDisque;
 	       int cle =0;
 	       String selectCommande = "SELECT commande.nomarticle FROM commande JOIN client on commande.client=client.id WHERE client.nom =?" ;
@@ -69,16 +70,20 @@ public class Facturation extends HttpServlet {
 	    	   pstmt= connexion.prepareStatement(selectCommande);
 	    	   pstmt.setString(1, nom);
 	    	   rset=pstmt.executeQuery();
+	    	   
 	    	   System.out.println(rset);
 	    	   out.println("<table border=1>");
 	    	   while (rset.next()) {
 	               String nomarticle = rset.getString("nomarticle");
+	               System.out.println("----------------------------------");
 	               System.out.println(nomarticle);
 	               leDisque = Stock.trouveDisque(nomarticle);
 	               out.println( "<tr> <td>" + leDisque.getTitre() + "  ,  " + leDisque.getNom() + " ,  "  + leDisque.getPrix() + " Euros  ,  Ann�e :" + leDisque.getAnnee()  +"</td>");
-		   	       out.println("<td> <IMG SRC= '" + repertoire + "/images/" + leDisque.getImage() +"'  BORDER=0> </A><br> </td> ");    	 
+		   	       out.println("<td> <IMG SRC= '" + repertoire + "/images/" + leDisque.getImage() +"'  BORDER=0> </A><br> </td> ");
+		   	       totalPrice += leDisque.getPrix();
 	           }
 	    	   out.println("</tr> </table>");
+	    	   out.println("<p> The total price: " + Integer.toString(totalPrice) + "</p>");
 	       //  *********************************************************      
 	       //   affichez les disques que client a command�  dans la  base de donn�es. � table commande � 
 	       // vous pouvez utiliser "afficherDisquesDansBase" avec 3 parm�tre :

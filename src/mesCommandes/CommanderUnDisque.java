@@ -22,6 +22,7 @@ public class CommanderUnDisque extends HttpServlet {
   nom = session.getAttribute("name").toString();
   ArrayList<String> leCaddie = Magasin.lesCaddy.get(nom);
   if(leCaddie==null) {
+	  System.out.println("Commander un disque: creat caddy");
  	  leCaddie = new ArrayList<String>();
   }
   leCaddie.add(refer);

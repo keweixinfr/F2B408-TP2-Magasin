@@ -81,8 +81,10 @@ public class EnregistrerCommande extends HttpServlet {
           pstmt= connexion.prepareStatement("select id from client where nom=?");
           pstmt.setString(1,nom);
           rset=pstmt.executeQuery();
-          if (!rset.next())   
+          System.out.println(rset);
+          if (!rset.next()) {
              stmt.executeUpdate("INSERT INTO client (nom)VALUES  ('" +  nom + "' )" );
+          }
        }
        
            catch (Exception E) {

@@ -17,6 +17,7 @@ public class AfficherLesDisques extends HttpServlet {
 		String repertoire = request.getContextPath();
 		HttpSession session = request.getSession();
 		nom = session.getAttribute("name").toString();
+		System.out.println(nom);
 		stockDisponible = (Stock)session.getAttribute("stock");
    //  ********************************************************************************************  
 	   response.setContentType("text/html");
